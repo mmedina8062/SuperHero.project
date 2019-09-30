@@ -26,7 +26,16 @@ namespace SuperHero.Controllers
         // GET: Superheroes/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Superhero superhero  = context.Superheroes.Find(id);
+            if (superhero == null)
+            {
+                return HttpNotFound();
+            }
+            return View(superhero);
         }
 
         // GET: Superheroes/Create
@@ -85,7 +94,6 @@ namespace SuperHero.Controllers
                 {
                     return View(HttpNotFound());
                 }
-            ModelState.AddModelError("", "Error");
             return View(collection);
 
         }
@@ -93,7 +101,16 @@ namespace SuperHero.Controllers
         // GET: Superheroes/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Superhero deletedSuperhero = context.Superheroes.Find(id);
+            if (deletedSuperhero == null)
+            {
+                return HttpNotFound();
+            }
+            return View(deletedSuperhero);
         }
 
         // POST: Superheroes/Delete/5
@@ -104,12 +121,16 @@ namespace SuperHero.Controllers
             {
                 // TODO: Add delete logic here
 
+                Superhero deletedSuperhero = context.Superheroes.Find(id);
+                context.Superheroes.Remove(deletedSuperhero);
+                context.SaveChanges();
                 return RedirectToAction("Index");
             }
             catch
             {
-                return View();
+                return View(HttpNotFound());
             }
+            
         }
     }
 }
