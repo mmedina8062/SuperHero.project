@@ -17,7 +17,8 @@ namespace SuperHero.Controllers
         // GET: Superheroes
         public ActionResult Index()
         {
-            return View();
+            var superHero = context.Superheroes.ToList();
+            return View(superHero);
         }
 
         // GET: Superheroes/Details/5
@@ -51,14 +52,15 @@ namespace SuperHero.Controllers
         }
 
         // GET: Superheroes/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int id) 
         {
+
             return View();
         }
 
         // POST: Superheroes/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit(int id, Superhero collection)
         {
             try
             {
