@@ -1,7 +1,9 @@
 ﻿using SuperHero.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
@@ -54,24 +56,38 @@ namespace SuperHero.Controllers
         // GET: Superheroes/Edit/5
         public ActionResult Edit(int id) 
         {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Superhero superhero = context.Superheroes.Find(id);
+            if (superhero == null)
+            {
+                return HttpNotFound();
+            }
 
-            return View();
+            return View(superhero);
         }
 
         // POST: Superheroes/Edit/5
         [HttpPost]
         public ActionResult Edit(int id, Superhero collection)
         {
-            try
-            {
-                // TODO: Add update logic here
+            if (ModelState.IsValid)
+                try
+                {
+                    // TODO: Add update logic here
+                    context.Entry(collection).State = EntityState.Modified;
+                    context.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                catch 
+                {
+                    return View(HttpNotFound());
+                }
+            ModelState.AddModelError("", "Error");
+            return View(collection);
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
         }
 
         // GET: Superheroes/Delete/5
